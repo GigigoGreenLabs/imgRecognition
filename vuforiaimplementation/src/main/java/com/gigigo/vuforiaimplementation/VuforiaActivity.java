@@ -1,27 +1,22 @@
 package com.gigigo.vuforiaimplementation;
 
 import android.content.Context;
-import android.content.DialogInterface;
-import android.graphics.Color;
-import android.graphics.Typeface;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.gigigo.ggglogger.GGGLogImpl;
-import com.gigigo.imagerecognitioninterface.ImageRecognition;
-import com.gigigo.imagerecognitioninterface.ImageRecognitionClient;
+import com.gigigo.ggglogger.LogLevel;
 import com.gigigo.vuforiacore.sdkimagerecognition.icloudrecognition.CloudRecognitionActivityLifeCycleCallBack;
 import com.gigigo.vuforiacore.sdkimagerecognition.icloudrecognition.ICloudRecognitionCommunicator;
+import com.gigigo.vuforiaimplementation.credentials.ParcelableVuforiaCredentials;
 import com.vuforia.Trackable;
 
 /**
@@ -30,7 +25,6 @@ import com.vuforia.Trackable;
 public class VuforiaActivity extends AppCompatActivity implements ICloudRecognitionCommunicator {
 
   //for my vuforia Activity implementation
-  private static final String TAG = "VuforiaActivity";
   private ImageView btnCloseVuforia;
   private TextView tvTitleVuforia;
   private Toolbar mToolbar;
@@ -47,54 +41,41 @@ public class VuforiaActivity extends AppCompatActivity implements ICloudRecognit
   @Override protected void onCreate(Bundle state) {
     super.onCreate(state);
     GGGLogImpl.log("VuforiaActivity.onCreate");
-    //asv llama al init
-    initVuforiaKeys();
+    initVuforiaKeys(getIntent());
   }
 
   //region implements CloudRecoCommunicator ands initializations calls
-  public boolean initVuforiaKeys() {
-    //Vuforia vuforia = Vuforia.getJsonThemeObject(Preferences.getJsonVuforia(this));
-    //String clientAccessKey = vuforia.getClientAccessKey();
-    //String clientSecretKey = vuforia.getClientSecretKey();
-    //String licenseKey = vuforia.getLicenseKey();
+  private void initVuforiaKeys(Intent intent) {
+    ParcelableVuforiaCredentials parcelableVuforiaCredentials =
+        intent.getParcelableExtra(ImageRecognitionVuforiaImpl.IMAGE_RECOGNITION_CREDENTIALS);
 
-    //TODO VuforiaKeys vuforiaKeys = irClient.getVuforiaKeys();
+    mCloudRecoCallBack = new CloudRecognitionActivityLifeCycleCallBack(this,
+        parcelableVuforiaCredentials.getClientAccessKey(),
+        parcelableVuforiaCredentials.getClientSecretKey(),
+        parcelableVuforiaCredentials.getLicenseKey());
 
-    //if (clientAccessKey != null && !clientAccessKey.isEmpty() &&
-    //        clientSecretKey != null && !clientSecretKey.isEmpty() &&
-    //        licenseKey != null && !licenseKey.isEmpty()) {
-    //    mCloudRecoCallBack = new CloudRecognitionActivityLifeCycleCallBack((Activity) this, clientAccessKey, clientSecretKey, licenseKey);
-    //    return true;
-    //} else
-    //    return false;
-    return false;
   }
 
-  ///**
-  // * @Deprecated
-  // */
-  //private void setThemeColorScheme() {
-  //      if (this.mCloudRecoCallBack != null) {
-  //          //Set theme
-  //          Theme theme = Theme.getJsonThemeObject(Preferences.getJsonTheme(this));
-  //          String secundaryColor = theme.getSecundaryColor();
-  //          String primaryColor = theme.getPrimaryColor();
-  //          Theme.setTheme(secundaryColor, tvTitleVuforia, btnCloseVuforia);
-  //          Theme.setTheme(primaryColor, mToolbar);
-  //          try {
-  //              ActionBar actionBar = getSupportActionBar();
-  //
-  //              if (actionBar != null) {
-  //                  actionBar.hide();
-  //              }
-  //              //btnCloseVuforia.setImageTintList(new ColorStateList.createFromXml(R.color.close_button,null,null)); MEJORA
-  //              this.mCloudRecoCallBack.setUIPointColor(Color.parseColor(secundaryColor));
-  //              this.mCloudRecoCallBack.setUIScanLineColor(Color.parseColor(primaryColor));
-  //          } catch (IllegalArgumentException e) {
-  //              GLog.e(TAG, e.getMessage());
-  //          }
-  //      }
-  //  }
+  /**
+   * @Deprecated
+   */
+  private void setThemeColorScheme() {
+        if (this.mCloudRecoCallBack != null) {
+            try {
+                ActionBar actionBar = getSupportActionBar();
+
+                if (actionBar != null) {
+                    actionBar.hide();
+                }
+                //TODO review following Line
+                //btnCloseVuforia.setImageTintList(new ColorStateList.createFromXml(R.color.close_button,null,null));
+                this.mCloudRecoCallBack.setUIPointColor(ContextCompat.getColor(this, R.color.img_recognition_primary_color));
+                this.mCloudRecoCallBack.setUIScanLineColor(ContextCompat.getColor(this, R.color.img_recognition_secondary_color));
+            } catch (IllegalArgumentException e) {
+                GGGLogImpl.log(e.getMessage(), LogLevel.ERROR);
+            }
+        }
+    }
 
   @Override public void setContentViewTop() {
 
@@ -127,133 +108,18 @@ public class VuforiaActivity extends AppCompatActivity implements ICloudRecognit
 
     mToolbar = (Toolbar) mView.findViewById(R.id.toolbar_sdkirorchextra);
 
-    //TODO check colors, default is white, define common resources
-    //setThemeColorScheme();
+    setThemeColorScheme();
 
   }
 
-  @Override public void onVuforiaResult(Trackable trackable, String uniqueID) {
-    //only for debug info show dialog with image recognition info
-    //TODO if (irClient.isDebugging())
-    //if (Orchextra.getCore().getDebug())
-    //    showCaptureMessageDialog(trackable, UniqueID);
-    //else {
-    //    sendInfoOrchextraService(UniqueID);
-    //    final String sendingText = this.getResources().getString(R.string.sending_to_orchextra_api_orchextra);
-    //    Toast.makeText(VuforiaActivity.this, sendingText, Toast.LENGTH_SHORT).show();
-    //}
-
-    ImageRecognitionClient irc = ImageRecognitionVuforiaImpl.getImageRecognitionInstance();
-    irc.recognizedPattern(uniqueID);
-
-    //TODO irClient.recognizedPattern(uniqueID);
-  }
-  //endregion
-
-  //region Show Dialog DEBUG INFO
-  private void showCaptureMessageDialog(Trackable trackable, String uniqueId) {
-    String s = "";
-    if (trackable != null && uniqueId != null) {
-      if (trackable.getType() != null) s = "Type: " + trackable.getType().toString() + "\n";
-      if (trackable.getUserData() != null) {
-        s += "UserData: " + trackable.getUserData().toString() + "\n";
-      }
-      if (trackable.getName() != null) s += "Name: " + trackable.getName().toString() + "\n";
-
-      s += "Id: " + trackable.getId() + "\n";
-      s += "Unique Target ID: " + uniqueId + "\n";
-
-      showMessageDialog(uniqueId, s);
-    }
+  @Override public void onVuforiaResult(Trackable trackable, String uniqueId) {
+    sendRecognizedPatternToClient(uniqueId);
   }
 
-  private void showMessageDialog(String uniqueId, String message) {
-
-    //final String sendingText = this.getResources().getString(R.string.sending_to_orchextra_api_orchextra);
-    //showMessageDialog(uniqueId, message, "Succesful Scan", "Send", sendingText, "Cancel");
+  private void sendRecognizedPatternToClient(String uniqueId) {
+    Intent i = new Intent();
+    i.putExtra(VuforiaRecognizedImageReceiver.PATTERN_ID, uniqueId);
+    i.setAction(VuforiaRecognizedImageReceiver.RECOGNIZED_IMAGE_INTENT);
+    this.sendBroadcast(i);
   }
-
-  private void showMessageDialog(final String uniqueId, String preformatmessage, String Title,
-      String textOkButton, final String textToastOkButton, String textCancelButton) {
-    //region show Message Dialog, info image pattern detected
-    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-    SpannableString spanTex = formatMessageText(preformatmessage);
-
-    builder.setMessage(spanTex)
-        .setTitle(Title)
-        .setPositiveButton(textOkButton, new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int id) {
-            sendInfoOrchextraService(uniqueId);
-            Toast.makeText(VuforiaActivity.this, textToastOkButton, Toast.LENGTH_SHORT).show();
-          }
-        })
-        .setNegativeButton(textCancelButton, new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int id) {
-            dialog.dismiss();
-          }
-        })
-        .setOnDismissListener(new DialogInterface.OnDismissListener() {
-          @Override public void onDismiss(DialogInterface dialog) {
-            VuforiaActivity.this.onResume();
-          }
-        });
-
-    AlertDialog dialog = builder.create();
-    dialog.show();
-    //endregion
-  }
-
-  private SpannableString formatMessageText(String preformatmessage) {
-    //region preformat String
-    SpannableString spanTex = new SpannableString(preformatmessage);
-
-    int size = spanTex.length();
-    int ini = 0;
-    int fin = 0;
-    char separator1 = '\n';
-    char separator2 = ':';
-
-    for (int i = 0; i < size; i++) {
-      if (fin == 0) {
-        fin = preformatmessage.indexOf(':') + 1;
-      } else {
-        ini = preformatmessage.indexOf(separator1, fin - 1);
-        fin = preformatmessage.indexOf(separator2, ini) + 1;
-      }
-      if (fin > ini && fin <= size && ini != -1) {
-        spanTex.setSpan(new ForegroundColorSpan(Color.parseColor("#748C2A")), ini, fin, 0);
-        spanTex.setSpan(new StyleSpan(Typeface.BOLD), ini, fin, 0);
-      }
-      if (ini < 0) return spanTex;
-    }
-    //endregion
-    return spanTex;
-  }
-  //endregion
-
-  //region Event  validate to->Orchextra Server
-
-  /**
-   * This method sends the information about the recognized image pattern object to orchextra
-   * Server
-   *
-   * @param uniqueId : contains the unique target id about the recognized image pattern object.
-   */
-  private void sendInfoOrchextraService(String uniqueId) {
-
-    //DeviceAuthentication deviceAuthentication = null;
-    //try {
-    //    deviceAuthentication = DeviceAuthenticationParse.getAccessToken(new JSONObject(Preferences.getAccessTokenJson(VuforiaActivity.this)));
-    //    Intent intent = new Intent(VuforiaActivity.this, ConfigService.class);
-    //    Bundle bundle = new Bundle();
-    //    bundle.putSerializable(ConfigService.PARAM_DEVICE, deviceAuthentication);
-    //    bundle.putSerializable(ConfigService.PARAM_VUFORIA, uniqueId);
-    //    intent.putExtras(bundle);
-    //    startService(intent);
-    //
-    //} catch (JSONException e) {
-    //    GGGLogImpl.log(TAG, e.getMessage(), LogLevel.ERROR);
-    //}
-  }
-  //endregion
 }

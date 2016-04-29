@@ -5,4 +5,11 @@ package com.gigigo.imagerecognitioninterface;
  * Date 29/4/16.
  */
 public interface ImageRecognitionCredentials {
+
+  String getServerSecretKey();
+  String getClientAccessKey();
+  String getLicensekey();
+  String getServerAccesskey();
+  String getClientSecretKey();
+
 }

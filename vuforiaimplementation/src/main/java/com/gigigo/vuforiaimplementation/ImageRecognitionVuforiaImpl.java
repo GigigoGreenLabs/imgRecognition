@@ -5,6 +5,8 @@ import android.content.Intent;
 import com.gigigo.imagerecognitioninterface.ImageRecognition;
 import com.gigigo.imagerecognitioninterface.ImageRecognitionClient;
 import com.gigigo.imagerecognitioninterface.ImageRecognitionCredentials;
+import com.gigigo.vuforiaimplementation.credentials.ParcelableIrCredentialsAdapter;
+import com.gigigo.vuforiaimplementation.credentials.ParcelableVuforiaCredentials;
 
 /**
  * Created by Sergio Martinez Rodriguez
@@ -12,32 +14,25 @@ import com.gigigo.imagerecognitioninterface.ImageRecognitionCredentials;
  */
 public class ImageRecognitionVuforiaImpl implements ImageRecognition {
 
-  private static final String IMAGE_RECOGNITION_CREDENTIALS = "IMAGE_RECOGNITION_CREDENTIALS";
-  private static ImageRecognitionClient imageRecognitionClient;
+  public static final String IMAGE_RECOGNITION_CREDENTIALS = "IMAGE_RECOGNITION_CREDENTIALS";
+  private ImageRecognitionClient imageRecognitionClient;
+  private VuforiaRecognizedImageReceiver vuforiaRecognizedImageReceiver;
   private Context context;
 
-  public ImageRecognitionVuforiaImpl(Context context, ImageRecognitionClient imageRecognitionClient) {
+  public ImageRecognitionVuforiaImpl(Context context, ImageRecognitionClient ircClient) {
     this.context = context.getApplicationContext();
-    ImageRecognitionVuforiaImpl.imageRecognitionClient = imageRecognitionClient;
-  }
-
-  //@Override public void setImageRecognitionClient(ImageRecognitionClient imageRecognitionClient) {
-  //  this.imageRecognitionClient = imageRecognitionClient;
-  //}
-
-  static ImageRecognitionClient getImageRecognitionInstance(){
-    return imageRecognitionClient;
+    this.imageRecognitionClient = ircClient;
+    this.vuforiaRecognizedImageReceiver = new VuforiaRecognizedImageReceiver(ircClient);
   }
 
   @Override public void startImageRecognition() {
     Intent imageRecognitionIntent = new Intent(context, VuforiaActivity.class);
     ImageRecognitionCredentials irc = imageRecognitionClient.obtainImageRecognitionCredentials();
-    ParcelableIrCredentialsAdapter parcelableIrCredentialsAdapter = new ParcelableIrCredentialsAdapter();
-    ParcelableVuforiaCredentials credentials = parcelableIrCredentialsAdapter.getParcelableFromCredentialsForVuforia(irc);
+    ParcelableIrCredentialsAdapter adapter = new ParcelableIrCredentialsAdapter();
+    ParcelableVuforiaCredentials credentials = adapter.getParcelableFromCredentialsForVuforia(irc);
     imageRecognitionIntent.putExtra(IMAGE_RECOGNITION_CREDENTIALS, credentials);
     context.startActivity(imageRecognitionIntent);
   }
-
 
 
 }

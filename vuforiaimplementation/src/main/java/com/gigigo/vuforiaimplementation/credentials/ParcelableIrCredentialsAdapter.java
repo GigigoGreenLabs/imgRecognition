@@ -1,4 +1,4 @@
-package com.gigigo.vuforiaimplementation;
+package com.gigigo.vuforiaimplementation.credentials;
 
 import com.gigigo.imagerecognitioninterface.ImageRecognitionCredentials;
 
@@ -9,6 +9,8 @@ import com.gigigo.imagerecognitioninterface.ImageRecognitionCredentials;
 public class ParcelableIrCredentialsAdapter {
 
   public ParcelableVuforiaCredentials getParcelableFromCredentialsForVuforia(ImageRecognitionCredentials irc) {
-    return null;
+
+    return new ParcelableVuforiaCredentials(irc.getLicensekey(), irc.getClientAccessKey(),
+        irc.getClientSecretKey(), irc.getServerAccesskey(), irc.getServerSecretKey() );
   }
 }
