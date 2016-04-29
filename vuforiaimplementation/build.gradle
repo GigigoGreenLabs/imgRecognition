@@ -19,5 +19,9 @@ android {
 }
 
 dependencies {
+  compile 'com.android.support:appcompat-v7:22.2.0'
+  compile 'com.android.support:design:22.2.0'
+  compile project (':vuforiacore')
+  compile project (':imagerecognitioninterface')
   testCompile 'junit:junit:4.12'
 }

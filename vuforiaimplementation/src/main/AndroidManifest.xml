@@ -2,9 +2,12 @@
     package="com.gigigo.vuforiaimplementation">
 
     <application android:allowBackup="true"
-        android:label="@string/app_name"
-        android:supportsRtl="true"
->
+        android:supportsRtl="true">
+
+        <activity
+            android:name=".VuforiaActivity"
+            android:screenOrientation="portrait"
+            android:label="@string/activity_title" />
 
     </application>
 
