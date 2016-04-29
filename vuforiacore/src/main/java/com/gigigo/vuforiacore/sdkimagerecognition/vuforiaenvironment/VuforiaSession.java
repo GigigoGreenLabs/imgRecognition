@@ -93,7 +93,7 @@ public class VuforiaSession implements UpdateCallbackInterface {
                 && (Build.VERSION.SDK_INT > Build.VERSION_CODES.FROYO))
             screenOrientation = ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR;
 
-        //region asv esto no es necesario ya que nuestra VuforiaActivity establece por manifest solo mostrarse portrait
+        //region this region can be deleted because our implementation of VuforiaActivity by manifest is only portrait
         // Use an OrientationChangeListener here to capture all orientation changes.  Android
         // will not send an Activity.onConfigurationChanged() callback on a 180 degree rotation,
         // ie: Left Landscape to Right Landscape.  Vuforia needs to react to this change and the
@@ -341,10 +341,7 @@ public class VuforiaSession implements UpdateCallbackInterface {
         protected Boolean doInBackground(Void... params) {
             // Prevent the onDestroy() method to overlap with initialization:
             synchronized (mShutdownLock) {
-/*
-                Vuforia.setInitParameters(mActivity, mVuforiaFlags,
-                        "AWWqxof\\/\\/\\/\\/\\/AAAAAYNQ4Gm0GEM5lE\\/cWF8g4Gt01+gc0Xsrd2aBp8I7iFYf6+69KpjwVSIwrLvpeVA+o2akWOEUrObBXfb0d7SsxNLSUO7nFmVhjJBcHh5J8EPseSwZb0xptLL3wbKVTF8xCTSsrEP45NLVCnJcGHGu7ngvcQNtIXsokop8w2XfS44baX1bkY6qvpKLh5nCxdtXBs9HcW0Ti8PdBwj8esWKyQgscdY+AIGO9Mq8uHwpLfVQC95xwLPgxwqvAiHG7sXROG9h1+VOhC9TEEcJHgBts0Qa4Wt\\/IjnAh+9lpG\\/tZ79dxDarPml96jc7ph4180sruwIT2nCRi+YKK7f30oLytBIP4N2VqVjooX2aKC4PBjTa");
-*/
+
                 Vuforia.setInitParameters(mActivity, mVuforiaFlags, kLicenseKey);
                 do {
                     // Vuforia.init() blocks until an initialization step is
