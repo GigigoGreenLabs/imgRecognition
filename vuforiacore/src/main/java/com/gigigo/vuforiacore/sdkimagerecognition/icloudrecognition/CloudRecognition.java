@@ -33,6 +33,7 @@ import com.vuforia.Trackable;
 import com.vuforia.Tracker;
 import com.vuforia.TrackerManager;
 import com.vuforia.Vuforia;
+
 import java.util.Vector;
 
 /**
@@ -90,15 +91,15 @@ public class CloudRecognition implements ApplicationControl {
     private double mLastErrorTime;
 
     boolean mIsDroidDevice = false;
-    private Vector<Texture> mTextures;
 
+    boolean bShowErrorMessages = true;
 
     private Activity mActivity;
     private ICloudRecognitionCommunicator mCommunicator;
 
     public CloudRecognition(Activity activity, ICloudRecognitionCommunicator communicator, String kAccessKey,
                             String kSecretKey,
-                            String kLicenseKey) {
+                            String kLicenseKey, boolean showErrorMessages) {
         this.mActivity = activity;
         this.mCommunicator = communicator;
         loadingDialogHandler = new LoadingDialogHandler(this.mActivity);
@@ -106,38 +107,20 @@ public class CloudRecognition implements ApplicationControl {
         this.mAccessKey = kAccessKey;
         this.mSecretKey = kSecretKey;
         this.mLicenseKey = kLicenseKey;
-/*
-        mUILayout.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                // Process the Gestures
-                if (mSampleAppMenu != null && mSampleAppMenu.processEvent(event))
-                    return true;
 
-                return mGestureDetector.onTouchEvent(event);
-            }
-        });*/
+        this.bShowErrorMessages = showErrorMessages;
     }
 
 
-    //region TODO falta ver como cohones asiganr esta vaina loooca que no se puede hacer mediante
-    //activityLIfeCycleCallbacks
-
-    //  @Override
-    //asv este se ha seteado
+    //region methods 4 Focus
     public boolean on_TouchEvent(MotionEvent event) {
-
         return mGestureDetector.onTouchEvent(event);
     }
 
     // Callback for configuration changes the activity handles itself
-    //@Override
     public void onConfigurationChanged(Configuration config) {
-        GGGLogImpl.log("onConfigurationChanged");
-        // super.onConfigurationChanged(config);
         vuforiaAppSession.onConfigurationChanged();
     }
-
 
     // Process Single Tap event to trigger autofocus
     private class GestureListener extends
@@ -171,31 +154,30 @@ public class CloudRecognition implements ApplicationControl {
     }
     //endregion
 
-
     // Called when the activity first starts or needs to be recreated after
     // resuming the application or a configuration change.
-    //region overrides ACTIVITY
+    //region methods Called from ActivityLifeCycle like overrides ACTIVITY
     public void on_Create() {
-        GGGLogImpl.log("on_Create");
-        // super.onCreate(savedInstanceState);
-        if (this.mLicenseKey == "" || this.mAccessKey == "" || this.mSecretKey == "") {
-            Log.e(this.mActivity.getResources().getString(R.string.orchextra_auth_error_tag), this.mActivity.getResources().getString(R.string.orchextra_auth_error_text));
-            this.mActivity.finish();
-        } else {
-            vuforiaAppSession = new VuforiaSession(this, this.mLicenseKey);
-            startLoadingAnimation();
-            vuforiaAppSession.initAR(this.mActivity, ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-            // Creates the GestureDetector listener for processing double tap
-            mGestureDetector = new GestureDetector(this.mActivity, new GestureListener());
-            mTextures = new Vector<Texture>();
-            //asv quitado loadTextures();
-            mIsDroidDevice = android.os.Build.MODEL.toLowerCase().startsWith("droid");
+        try {
+            if (this.mLicenseKey == "" || this.mAccessKey == "" || this.mSecretKey == "") {
+                Log.e(this.mActivity.getResources().getString(R.string.orchextra_auth_error_tag), this.mActivity.getResources().getString(R.string.orchextra_auth_error_text));
+                this.mActivity.finish();
+            } else {
+                vuforiaAppSession = new VuforiaSession(this, this.mLicenseKey);
+                startLoadingAnimation();
+                vuforiaAppSession.initAR(this.mActivity, ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                // Creates the GestureDetector listener for processing double tap
+                mGestureDetector = new GestureDetector(this.mActivity, new GestureListener());
+
+                mIsDroidDevice = android.os.Build.MODEL.toLowerCase().startsWith("droid");
+            }
+        } catch (Throwable tr) {
+            GGGLogImpl.log(tr.getMessage(), LogLevel.ERROR);
         }
     }
 
     // Called when the activity will start interacting with the user.
     protected void on_Resume() {
-        GGGLogImpl.log("on_Resume");
         // This is needed for some Droid devices to force portrait
         if (mIsDroidDevice) {
             this.mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -219,9 +201,7 @@ public class CloudRecognition implements ApplicationControl {
 
     // Called when the system is about to start resuming a previous activity.
     protected void on_Pause() {
-        GGGLogImpl.log("on_Pause");
-        // super.onPause();
-        //asv aqui no hacen gestion del flash de la camara ;(
+        //Todo camera flash, in previous version of Vuforia was necesary, in 5.5.9 maybe not
         try {
             vuforiaAppSession.pauseAR();
         } catch (VuforiaException e) {
@@ -239,8 +219,6 @@ public class CloudRecognition implements ApplicationControl {
 
     // The final call you receive before your activity is destroyed.
     protected void on_Destroy() {
-        GGGLogImpl.log("on_Destroy");
-        //super.onDestroy();
         try {
             if (vuforiaAppSession != null)
                 vuforiaAppSession.stopAR();
@@ -251,6 +229,7 @@ public class CloudRecognition implements ApplicationControl {
     }
     //endregion
 
+    //region Init
     protected void deinitCloudReco() {
         // Get the object tracker:
         TrackerManager trackerManager = TrackerManager.getInstance();
@@ -258,7 +237,7 @@ public class CloudRecognition implements ApplicationControl {
                 .getTracker(ObjectTracker.getClassType());
         if (objectTracker == null) {
             GGGLogImpl.log("Failed to destroy the tracking data set because the ObjectTracker has not"
-                + " been initialized.", LogLevel.ERROR);
+                    + " been initialized.", LogLevel.ERROR);
             return;
         }
 
@@ -266,7 +245,6 @@ public class CloudRecognition implements ApplicationControl {
         TargetFinder finder = objectTracker.getTargetFinder();
         finder.deinit();
     }
-
 
     public void startLoadingAnimation() {
         // Inflates the Overlay Layout to be displayed above the Camera View
@@ -287,7 +265,6 @@ public class CloudRecognition implements ApplicationControl {
 
     }
 
-
     // Initializes AR application components.
     private void initApplicationAR() {
         // Create OpenGL ES view:
@@ -301,10 +278,10 @@ public class CloudRecognition implements ApplicationControl {
 
         // Setups the Renderer of the GLView
         mRenderer = new CloudRecognitionRenderer(vuforiaAppSession, this);
-        //asv fuera mRenderer.setTextures(mTextures);
         mGlView.setRenderer(mRenderer);
 
     }
+//endregion
 
     //region retrieve Error Message
     // Returns the error message for each error code
@@ -329,7 +306,6 @@ public class CloudRecognition implements ApplicationControl {
             return this.mActivity.getString(R.string.UPDATE_ERROR_UNKNOWN_DESC);
         }
     }
-
 
     // Returns the error message for each error code
     private String getStatusTitleString(int code) {
@@ -358,86 +334,51 @@ public class CloudRecognition implements ApplicationControl {
 
     // Shows error messages as System dialogs
     public void showErrorMessage(int errorCode, double errorTime, boolean finishActivityOnError) {
-        if (errorTime < (mLastErrorTime + 5.0) || errorCode == mlastErrorCode)
-            return;
+        //you can change for show or hidden the vuforia error messages
+        if (bShowErrorMessages) {
+            if (errorTime < (mLastErrorTime + 5.0) || errorCode == mlastErrorCode)
+                return;
 
-        mlastErrorCode = errorCode;
-        mFinishActivityOnError = finishActivityOnError;
+            mlastErrorCode = errorCode;
+            mFinishActivityOnError = finishActivityOnError;
 
+            final Activity activity = this.mActivity;
 
-        final Activity activity = this.mActivity;
+            this.mActivity.runOnUiThread(new Runnable() {
+                public void run() {
+                    if (mErrorDialog != null) {
+                        mErrorDialog.dismiss();
+                    }
 
-
-        this.mActivity.runOnUiThread(new Runnable() {
-            public void run() {
-                if (mErrorDialog != null) {
-                    mErrorDialog.dismiss();
-                }
-
-                // Generates an Alert Dialog to show the error message
-                AlertDialog.Builder builder = new AlertDialog.Builder(
-                        activity);
-                builder
-                        .setMessage(
-                                getStatusDescString(CloudRecognition.this.mlastErrorCode))
-                        .setTitle(
-                                getStatusTitleString(CloudRecognition.this.mlastErrorCode))
-                        .setCancelable(false)
-                        .setIcon(0)
-                        .setPositiveButton(activity.getString(R.string.button_OK),
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        if (mFinishActivityOnError) {
-                                            activity.finish();
-                                        } else {
-                                            dialog.dismiss();
+                    // Generates an Alert Dialog to show the error message
+                    AlertDialog.Builder builder = new AlertDialog.Builder(
+                            activity);
+                    builder
+                            .setMessage(
+                                    getStatusDescString(CloudRecognition.this.mlastErrorCode))
+                            .setTitle(
+                                    getStatusTitleString(CloudRecognition.this.mlastErrorCode))
+                            .setCancelable(false)
+                            .setIcon(0)
+                            .setPositiveButton(activity.getString(R.string.button_OK),
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            if (mFinishActivityOnError) {
+                                                activity.finish();
+                                            } else {
+                                                dialog.dismiss();
+                                            }
                                         }
-                                    }
-                                });
+                                    });
 
-                mErrorDialog = builder.create();
-                mErrorDialog.show();
-            }
-        });
-    }
-
-
-    /* Shows initialization error messages as System dialogs
-    public void showInitializationErrorMessage(String message) {
-        final String errorMessage = message;
-        final Activity activity = this.mActivity;
-
-
-
-
-        this.mActivity.runOnUiThread(new Runnable() {
-            public void run() {
-                if (mErrorDialog != null) {
-                    mErrorDialog.dismiss();
+                    mErrorDialog = builder.create();
+                    mErrorDialog.show();
                 }
-
-                // Generates an Alert Dialog to show the error message
-                AlertDialog.Builder builder = new AlertDialog.Builder(
-                        activity);
-                builder
-                        .setMessage(errorMessage)
-                        .setTitle(activity.getString(R.string.INIT_ERROR))
-                        .setCancelable(false)
-                        .setIcon(0)
-                        .setPositiveButton(activity.getString(R.string.button_OK),
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        activity.finish();
-                                    }
-                                });
-
-                mErrorDialog = builder.create();
-                mErrorDialog.show();
-            }
-        });
+            });
+        }
     }
-*/
 
+    //restart finder
     public void startFinderIfStopped() {
         if (!mFinderStarted) {
             mFinderStarted = true;
@@ -455,7 +396,7 @@ public class CloudRecognition implements ApplicationControl {
         }
     }
 
-
+    //stop finder
     public void stopFinderIfStarted() {
         if (mFinderStarted) {
             mFinderStarted = false;
@@ -472,7 +413,7 @@ public class CloudRecognition implements ApplicationControl {
         }
     }
 
-    //region asv new ini
+    //region Set colors of the finder animations
     int mScanLineColor = 0;
     int mPointColor = 0;
 
@@ -488,10 +429,9 @@ public class CloudRecognition implements ApplicationControl {
 
         // Initialize target finder:
         TargetFinder targetFinder = objectTracker.getTargetFinder();
-
-        // mTargetFinder.setUIScanlineColor(r, g, b);
-        targetFinder.setUIScanlineColor(16, 22, 79);
-        //mTargetFinder.setUIScanlineColor(55, 42, 202);
+        //targetFinder.setUIScanlineColor(16, 22, 79);
+        //todo verify if the choose color are setted or another transform is necesary 4 openglcolors
+        targetFinder.setUIScanlineColor(r, g, b);
 
     }
 
@@ -500,7 +440,6 @@ public class CloudRecognition implements ApplicationControl {
         float r = Color.red(mPointColor);
         float g = Color.green(mPointColor);
         float b = Color.blue(mPointColor);
-        // mTargetFinder.setUIPointColor(r, g, b);
 
         TrackerManager trackerManager = TrackerManager.getInstance();
         ObjectTracker objectTracker = (ObjectTracker) trackerManager
@@ -508,15 +447,14 @@ public class CloudRecognition implements ApplicationControl {
 
         // Initialize target finder:
         TargetFinder targetFinder = objectTracker.getTargetFinder();
-
-        // mTargetFinder.setUIScanlineColor(r, g, b);
-        targetFinder.setUIPointColor(77, 29, 87);
+        //todo verify if the choose color are setted or another transform is necesary 4 openglcolors
+        targetFinder.setUIScanlineColor(r, g, b);
+        //targetFinder.setUIPointColor(77, 29, 87);
 
     }
     //endregion
 
     //region implements -->ApplicationControl
-    //1º
     @Override
     public boolean doInitTrackers() {
         TrackerManager tManager = TrackerManager.getInstance();
@@ -536,7 +474,6 @@ public class CloudRecognition implements ApplicationControl {
         return result;
     }
 
-    //2º
     @Override
     public boolean doLoadTrackersData() {
         GGGLogImpl.log("doLoadTrackersData");
@@ -566,7 +503,7 @@ public class CloudRecognition implements ApplicationControl {
             return false;
         }
 
-        // Use the following calls if you would like to customize the color of
+        // Now you can customize the color of
         // the UI
         // targetFinder->setUIScanlineColor(1.0, 0.0, 0.0);
         // targetFinder->setUIPointColor(0.0, 0.0, 1.0);
@@ -574,7 +511,7 @@ public class CloudRecognition implements ApplicationControl {
         return true;
     }
 
-    //3º
+
     @Override
     public boolean doStartTrackers() {
         // Indicate if the trackers were started correctly
@@ -594,7 +531,7 @@ public class CloudRecognition implements ApplicationControl {
         return result;
     }
 
-    //4º
+
     @Override
     public boolean doStopTrackers() {
         // Indicate if the trackers were stopped correctly
@@ -621,13 +558,11 @@ public class CloudRecognition implements ApplicationControl {
         return result;
     }
 
-    //5º
     @Override
     public boolean doUnloadTrackersData() {
         return true;
     }
 
-    //6º
     @Override
     public boolean doDeinitTrackers() {
         // Indicate if the trackers were deinitialized correctly
@@ -639,7 +574,7 @@ public class CloudRecognition implements ApplicationControl {
         return result;
     }
 
-    //7º
+
     @Override
     public void onInitARDone(VuforiaException exception) {
         if (exception == null) {
@@ -679,15 +614,12 @@ public class CloudRecognition implements ApplicationControl {
 
                 showErrorMessage(mInitErrorCode, 10, true);
             } else {
-                //asv esto podria sustituirse por un finish(); y a jugar a la palita
                 this.mActivity.finish();
                 GGGLogImpl.log(exception.getMessage(), LogLevel.ERROR);
-                //showInitializationErrorMessage(exception.getString());
             }
         }
     }
 
-    //8º
     @Override
     public void onVuforiaUpdate(State state) {
 
@@ -725,7 +657,7 @@ public class CloudRecognition implements ApplicationControl {
                     if (mExtendedTracking)
                         trackable.startExtendedTracking();
 
-                    //asvnew para transmitir resultado al vuforiaactivity mediante el pipe/communicator
+                    //raise result 2 vuforiaactivity over pipe/communicator
                     this.mCommunicator.onVuforiaResult(trackable, result.getUniqueTargetId());
                 }
             }

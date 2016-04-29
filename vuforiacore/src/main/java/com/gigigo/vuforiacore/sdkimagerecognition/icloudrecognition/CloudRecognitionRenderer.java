@@ -36,9 +36,6 @@ public class CloudRecognitionRenderer implements GLSurfaceView.Renderer {
     private int texSampler2DHandle;
 
     private Vector<Texture> mTextures;
-
-  //asvteapot  private Teapot mTeapot;
-
     private CloudRecognition mCloudReco;
 
     public CloudRecognitionRenderer(VuforiaSession session, CloudRecognition activity) {
@@ -108,7 +105,7 @@ public class CloudRecognitionRenderer implements GLSurfaceView.Renderer {
                 "modelViewProjectionMatrix");
         texSampler2DHandle = GLES20.glGetUniformLocation(shaderProgramID,
                 "texSampler2D");
-      //asvteapot  mTeapot = new Teapot();
+
     }
 
 
@@ -176,14 +173,6 @@ public class CloudRecognitionRenderer implements GLSurfaceView.Renderer {
 
         // activate the shader program and bind the vertex/normal/tex coords
         GLES20.glUseProgram(shaderProgramID);
-        /* //asvteapot
-        GLES20.glVertexAttribPointer(vertexHandle, 3, GLES20.GL_FLOAT, false,
-                0, mTeapot.getVertices());
-        GLES20.glVertexAttribPointer(normalHandle, 3, GLES20.GL_FLOAT, false,
-                0, mTeapot.getNormals());
-        GLES20.glVertexAttribPointer(textureCoordHandle, 2, GLES20.GL_FLOAT,
-                false, 0, mTeapot.getTexCoords());
-*/
         GLES20.glEnableVertexAttribArray(vertexHandle);
         GLES20.glEnableVertexAttribArray(normalHandle);
         GLES20.glEnableVertexAttribArray(textureCoordHandle);
@@ -200,10 +189,6 @@ public class CloudRecognitionRenderer implements GLSurfaceView.Renderer {
         GLES20.glUniformMatrix4fv(mvpMatrixHandle, 1, false,
                 modelViewProjection, 0);
 
-        ////asvteapotfinally draw the teapot
-      //  GLES20.glDrawElements(GLES20.GL_TRIANGLES, mTeapot.getNumObjectIndex(),
-         //       GLES20.GL_UNSIGNED_SHORT, mTeapot.getIndices());
-
         // disable the enabled arrays
         GLES20.glDisableVertexAttribArray(vertexHandle);
         GLES20.glDisableVertexAttribArray(normalHandle);
@@ -211,7 +196,6 @@ public class CloudRecognitionRenderer implements GLSurfaceView.Renderer {
 
         VuforiaUtils.checkGLError("CloudReco renderFrame");
     }
-
 
     public void setTextures(Vector<Texture> textures) {
         mTextures = textures;
