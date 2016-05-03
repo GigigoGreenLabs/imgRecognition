@@ -3,23 +3,18 @@ package com.gigigo.vuforiaimplementation;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import com.gigigo.imagerecognitioninterface.ImageRecognitionClient;
+import com.gigigo.imagerecognitioninterface.ImageRecognitionConstants;
 
 /**
  * Created by Sergio Martinez Rodriguez
  * Date 29/4/16.
  */
-public class VuforiaRecognizedImageReceiver extends BroadcastReceiver {
-
-  public static final String RECOGNIZED_IMAGE_INTENT = "com.gigigo.imagerecognition.intent.action.RECOGNIZED_IMAGE";
-  public static final String PATTERN_ID = "PATTERN_ID";
-  private final ImageRecognitionClient imageRecognitionClient;
-
-  public VuforiaRecognizedImageReceiver(ImageRecognitionClient imageRecognitionClient) {
-    this.imageRecognitionClient = imageRecognitionClient;
-  }
+public abstract class VuforiaRecognizedImageReceiver extends BroadcastReceiver {
 
   @Override public void onReceive(Context context, Intent intent) {
-    imageRecognitionClient.recognizedPattern(intent.getStringExtra(PATTERN_ID));
+    vuforiaPatternRecognized(intent.getStringExtra(ImageRecognitionConstants.VUFORIA_PATTERN_ID));
   }
+
+  public abstract void vuforiaPatternRecognized(String stringExtra);
+
 }

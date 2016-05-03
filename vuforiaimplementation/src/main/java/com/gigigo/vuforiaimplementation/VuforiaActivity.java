@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.gigigo.ggglogger.GGGLogImpl;
 import com.gigigo.ggglogger.LogLevel;
+import com.gigigo.imagerecognitioninterface.ImageRecognitionConstants;
 import com.gigigo.vuforiacore.sdkimagerecognition.icloudrecognition.CloudRecognitionActivityLifeCycleCallBack;
 import com.gigigo.vuforiacore.sdkimagerecognition.icloudrecognition.ICloudRecognitionCommunicator;
 import com.gigigo.vuforiaimplementation.credentials.ParcelableVuforiaCredentials;
@@ -23,6 +24,8 @@ import com.vuforia.Trackable;
  * Created by ASV on 20/10/2015.
  */
 public class VuforiaActivity extends AppCompatActivity implements ICloudRecognitionCommunicator {
+
+  private static final String RECOGNIZED_IMAGE_INTENT = "com.gigigo.imagerecognition.intent.action.RECOGNIZED_IMAGE";
 
   //for my vuforia Activity implementation
   private ImageView btnCloseVuforia;
@@ -52,7 +55,7 @@ public class VuforiaActivity extends AppCompatActivity implements ICloudRecognit
     mCloudRecoCallBack = new CloudRecognitionActivityLifeCycleCallBack(this,
         parcelableVuforiaCredentials.getClientAccessKey(),
         parcelableVuforiaCredentials.getClientSecretKey(),
-        parcelableVuforiaCredentials.getLicenseKey());
+        parcelableVuforiaCredentials.getLicenseKey(), false);
 
   }
 
@@ -118,8 +121,8 @@ public class VuforiaActivity extends AppCompatActivity implements ICloudRecognit
 
   private void sendRecognizedPatternToClient(String uniqueId) {
     Intent i = new Intent();
-    i.putExtra(VuforiaRecognizedImageReceiver.PATTERN_ID, uniqueId);
-    i.setAction(VuforiaRecognizedImageReceiver.RECOGNIZED_IMAGE_INTENT);
+    i.putExtra(ImageRecognitionConstants.VUFORIA_PATTERN_ID, uniqueId);
+    i.setAction(RECOGNIZED_IMAGE_INTENT);
     this.sendBroadcast(i);
   }
 }

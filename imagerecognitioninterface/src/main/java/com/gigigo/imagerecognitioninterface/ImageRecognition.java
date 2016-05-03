@@ -5,6 +5,5 @@ package com.gigigo.imagerecognitioninterface;
  * Date 29/4/16.
  */
 public interface ImageRecognition {
-  //void setImageRecognitionClient(ImageRecognitionClient imageRecognitionClient);
   void startImageRecognition();
 }

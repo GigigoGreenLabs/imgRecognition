@@ -6,10 +6,8 @@ package com.gigigo.imagerecognitioninterface;
  */
 public interface ImageRecognitionCredentials {
 
-  String getServerSecretKey();
   String getClientAccessKey();
   String getLicensekey();
-  String getServerAccesskey();
   String getClientSecretKey();
 
 }

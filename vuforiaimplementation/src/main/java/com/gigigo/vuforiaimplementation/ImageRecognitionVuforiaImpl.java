@@ -16,13 +16,11 @@ public class ImageRecognitionVuforiaImpl implements ImageRecognition {
 
   public static final String IMAGE_RECOGNITION_CREDENTIALS = "IMAGE_RECOGNITION_CREDENTIALS";
   private ImageRecognitionClient imageRecognitionClient;
-  private VuforiaRecognizedImageReceiver vuforiaRecognizedImageReceiver;
   private Context context;
 
   public ImageRecognitionVuforiaImpl(Context context, ImageRecognitionClient ircClient) {
     this.context = context.getApplicationContext();
     this.imageRecognitionClient = ircClient;
-    this.vuforiaRecognizedImageReceiver = new VuforiaRecognizedImageReceiver(ircClient);
   }
 
   @Override public void startImageRecognition() {

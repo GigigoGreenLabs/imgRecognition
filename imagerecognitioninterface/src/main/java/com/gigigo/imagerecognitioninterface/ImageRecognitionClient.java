@@ -6,8 +6,5 @@ package com.gigigo.imagerecognitioninterface;
  * Date 29/4/16.
  */
 public interface ImageRecognitionClient {
-
   ImageRecognitionCredentials obtainImageRecognitionCredentials();
-  void recognizedPattern(String patternId);
-
 }

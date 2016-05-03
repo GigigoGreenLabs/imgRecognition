@@ -9,14 +9,6 @@
             android:screenOrientation="portrait"
             android:label="@string/activity_title" />
 
-        <receiver android:name=".VuforiaRecognizedImageReceiver." >
-            <intent-filter>
-                <action android:name="android.intent.action.PHONE_STATE" >
-                </action>
-            </intent-filter>
-        </receiver>
-
-        <action android:name="com.gigigo.imagerecognition.intent.action.RECOGNIZED_IMAGE"></action>
     </application>
 
 </manifest>
