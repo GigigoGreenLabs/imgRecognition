@@ -11,6 +11,7 @@ public class ParcelableIrCredentialsAdapter {
   public ParcelableVuforiaCredentials getParcelableFromCredentialsForVuforia(ImageRecognitionCredentials irc) {
 
     return new ParcelableVuforiaCredentials(irc.getLicensekey(), irc.getClientAccessKey(),
-        irc.getClientSecretKey(), irc.getServerAccesskey(), irc.getServerSecretKey() );
+        irc.getClientSecretKey());
   }
+
 }

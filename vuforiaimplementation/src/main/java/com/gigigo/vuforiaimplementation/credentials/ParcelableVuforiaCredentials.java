@@ -12,17 +12,13 @@ public class ParcelableVuforiaCredentials implements Parcelable{
   private final String licenseKey;
   private final String clientAccessKey;
   private final String clientSecretKey;
-  private final String serverAccessKey;
-  private final String serverSecretKey;
 
   public ParcelableVuforiaCredentials(String licenseKey, String clientAccessKey,
-      String clientSecretKey, String serverAccessKey, String serverSecretKey) {
+      String clientSecretKey) {
 
     this.licenseKey = licenseKey;
     this.clientAccessKey = clientAccessKey;
     this.clientSecretKey = clientSecretKey;
-    this.serverAccessKey = serverAccessKey;
-    this.serverSecretKey = serverSecretKey;
 
   }
 
@@ -38,20 +34,10 @@ public class ParcelableVuforiaCredentials implements Parcelable{
     return clientSecretKey;
   }
 
-  public String getServerAccessKey() {
-    return serverAccessKey;
-  }
-
-  public String getServerSecretKey() {
-    return serverSecretKey;
-  }
-
   protected ParcelableVuforiaCredentials(Parcel in) {
     licenseKey = in.readString();
     clientAccessKey = in.readString();
     clientSecretKey = in.readString();
-    serverAccessKey = in.readString();
-    serverSecretKey = in.readString();
   }
 
   @Override
@@ -64,8 +50,6 @@ public class ParcelableVuforiaCredentials implements Parcelable{
     dest.writeString(licenseKey);
     dest.writeString(clientAccessKey);
     dest.writeString(clientSecretKey);
-    dest.writeString(serverAccessKey);
-    dest.writeString(serverSecretKey);
   }
 
   @SuppressWarnings("unused")
