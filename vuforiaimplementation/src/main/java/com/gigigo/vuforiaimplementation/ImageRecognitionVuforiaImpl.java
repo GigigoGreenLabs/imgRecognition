@@ -22,6 +22,7 @@ public class ImageRecognitionVuforiaImpl implements ImageRecognition {
 
   @Override public void startImageRecognition(ImageRecognitionCredentials imageRecognitionCredentials) {
     Intent imageRecognitionIntent = new Intent(context, VuforiaActivity.class);
+    imageRecognitionIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     ParcelableIrCredentialsAdapter adapter = new ParcelableIrCredentialsAdapter();
     ParcelableVuforiaCredentials credentials = adapter.getParcelableFromCredentialsForVuforia(imageRecognitionCredentials);
     imageRecognitionIntent.putExtra(IMAGE_RECOGNITION_CREDENTIALS, credentials);
