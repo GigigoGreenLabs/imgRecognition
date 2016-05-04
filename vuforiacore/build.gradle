@@ -20,6 +20,11 @@ android {
   lintOptions {
     abortOnError false
   }
+
+  sourceSets.main {
+    jniLibs.srcDir 'libs'
+  }
+
 }
 
 dependencies {
