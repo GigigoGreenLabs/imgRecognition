@@ -52,7 +52,7 @@ public class VuforiaActivity extends AppCompatActivity implements ICloudRecognit
     ParcelableVuforiaCredentials parcelableVuforiaCredentials =
         intent.getParcelableExtra(ImageRecognitionVuforiaImpl.IMAGE_RECOGNITION_CREDENTIALS);
 
-    mCloudRecoCallBack = new CloudRecognitionActivityLifeCycleCallBack(this,
+    mCloudRecoCallBack = new CloudRecognitionActivityLifeCycleCallBack(this, this,
         parcelableVuforiaCredentials.getClientAccessKey(),
         parcelableVuforiaCredentials.getClientSecretKey(),
         parcelableVuforiaCredentials.getLicenseKey(), false);
