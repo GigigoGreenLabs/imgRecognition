@@ -2,8 +2,7 @@
     package="com.gigigo.vuforiacore">
 
     <application android:allowBackup="true"
-        android:supportsRtl="true"
->
+        android:supportsRtl="true">
 
     </application>
 
