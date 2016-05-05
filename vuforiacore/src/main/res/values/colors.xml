@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="img_recognition_primary_color">#ee524f</color>
-    <color name="img_recognition_secondary_color">#660099</color>
+  <color name="vuforia_loading_indicator_color">#FFFFFF</color>
+  <color name="vuforia_loading_bg_color">#FFFFFF</color>
 </resources>

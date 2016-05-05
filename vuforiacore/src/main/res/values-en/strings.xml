@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-  <!--<string name="app_name">Vuforia</string>-->
   <string name="app_description">Vuforia Sample Applications</string>
 
   <string name="button_start">Start</string>
@@ -46,27 +45,9 @@
   <string name="target_quality_error_title">Low Quality Image</string>
   <string name="target_quality_error_desc">The image has very little detail, please try another.</string>
 
- <!-- <string name="menu_back">Vuforia Samples</string>
-  <string name="menu_extended_tracking">Extended Tracking</string>
-  <string name="menu_character_mode">Character Mode</string>
-  <string name="menu_flash">Flash</string>
-  <string name="menu_flash_error_on">Unable to turn on flash</string>
-  <string name="menu_flash_error_off">Unable to turn off flash</string>
-  <string name="menu_contAutofocus">Autofocus</string>
-  <string name="menu_contAutofocus_error_on">Unable to activate Continuous Auto-Focus</string>
-  <string name="menu_contAutofocus_error_off">Unable to deactivate Continuous Auto-Focus</string>
-  <string name="menu_datasets">DATASETS</string>
-  <string name="menu_camera">CAMERA</string>
-  <string name="menu_camera_front">Front</string>
-  <string name="menu_camera_back">Rear</string>
-  <string name="menu_button_red">Red</string>
-  <string name="menu_button_blue">Blue</string>
-  <string name="menu_button_yellow">Yellow</string>
-  <string name="menu_button_green">Green</string>
--->
   <string name="splash_screen_description">Vuforia Splash</string>
   <string name="orchextra_auth_error_tag">Vuforia-SDK  ERROR</string>
   <string name="orchextra_auth_error_text">ERROR: Vuforia credentials are not set for this project</string>
-
+  <string name="vuforia_loading_indicator_message">Loading image recognition module ...</string>
 
 </resources>

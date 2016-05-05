@@ -3,14 +3,37 @@
     android:id="@+id/camera_overlay_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/vuforia_loading_bg_color"
     >
 
-  <ProgressBar
-      android:id="@+id/loading_indicator"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_centerHorizontal="true"
-      android:layout_centerVertical="true"
-      />
+  <LinearLayout
+      android:id="@+id/loading_container"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:gravity="center"
+      android:orientation="vertical"
+      >
 
+    <ProgressBar
+        android:id="@+id/loading_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:indeterminateTint="@color/vuforia_loading_indicator_color"
+        android:indeterminateTintMode="src_in"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/vuforia_loading_indicator_message"
+        android:layout_margin="@dimen/vuforia_loading_message_margin"
+        android:gravity="center"
+        android:textColor="@color/vuforia_loading_indicator_color"
+        android:id="@+id/textView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="49dp"
+        />
+
+  </LinearLayout>
 </RelativeLayout>

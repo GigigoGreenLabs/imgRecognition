@@ -1,17 +1,17 @@
 package com.gigigo.vuforiaimplementation;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.view.Window;
+import android.widget.RelativeLayout;
 import com.gigigo.ggglogger.GGGLogImpl;
 import com.gigigo.ggglogger.LogLevel;
 import com.gigigo.imagerecognitioninterface.ImageRecognitionConstants;
@@ -20,30 +20,22 @@ import com.gigigo.vuforiacore.sdkimagerecognition.icloudrecognition.ICloudRecogn
 import com.gigigo.vuforiaimplementation.credentials.ParcelableVuforiaCredentials;
 import com.vuforia.Trackable;
 
-/**
- * Created by ASV on 20/10/2015.
- */
 public class VuforiaActivity extends AppCompatActivity implements ICloudRecognitionCommunicator {
 
   private static final String RECOGNIZED_IMAGE_INTENT = "com.gigigo.imagerecognition.intent.action.RECOGNIZED_IMAGE";
 
-  //for my vuforia Activity implementation
-  private ImageView btnCloseVuforia;
-  private TextView tvTitleVuforia;
-  private Toolbar mToolbar;
-  private String mActivityTitle;
-
   //basics for any vuforia activity
-  private View mView;
+  //private View mView;
   private static CloudRecognitionActivityLifeCycleCallBack mCloudRecoCallBack;
-
-  public VuforiaActivity() {
-    this.mActivityTitle = "Image Recognition";
-  }
 
   @Override protected void onCreate(Bundle state) {
     super.onCreate(state);
     GGGLogImpl.log("VuforiaActivity.onCreate");
+
+    if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB){
+      hideActionBar();
+    }
+
     initVuforiaKeys(getIntent());
   }
 
@@ -65,54 +57,48 @@ public class VuforiaActivity extends AppCompatActivity implements ICloudRecognit
   private void setThemeColorScheme() {
         if (this.mCloudRecoCallBack != null) {
             try {
-                ActionBar actionBar = getSupportActionBar();
-
-                if (actionBar != null) {
-                    actionBar.hide();
-                }
-                //TODO review following Line
-                //btnCloseVuforia.setImageTintList(new ColorStateList.createFromXml(R.color.close_button,null,null));
-                this.mCloudRecoCallBack.setUIPointColor(ContextCompat.getColor(this, R.color.img_recognition_primary_color));
-                this.mCloudRecoCallBack.setUIScanLineColor(ContextCompat.getColor(this, R.color.img_recognition_secondary_color));
+                this.mCloudRecoCallBack.setUIPointColor(ContextCompat.getColor(this, R.color.ir_scan_point_color));
+                this.mCloudRecoCallBack.setUIScanLineColor(ContextCompat.getColor(this, R.color.ir_scan_line_color));
             } catch (IllegalArgumentException e) {
                 GGGLogImpl.log(e.getMessage(), LogLevel.ERROR);
             }
         }
     }
 
-  @Override public void setContentViewTop() {
+  @Override public void setContentViewTop(View vuforiaView) {
 
-    LayoutInflater inflater =
-        (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-    mView = inflater.inflate(R.layout.activity_vuforia, null);
-    try {
-      addContentView(mView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-          ViewGroup.LayoutParams.MATCH_PARENT));
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+    LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+    View view = inflater.inflate(R.layout.activity_vuforia, null);
+
+    RelativeLayout relativeLayout = (RelativeLayout) view.findViewById(R.id.layoutContentVuforiaGL);
+    relativeLayout.addView(vuforiaView, 0);
+
+    ViewGroup.LayoutParams vlp = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+        ViewGroup.LayoutParams.MATCH_PARENT);
+
+    addContentView(view, vlp);
 
     //region Button Close
-    btnCloseVuforia = (ImageView) mView.findViewById(R.id.btnCloseVuforia);
-
-    btnCloseVuforia.setOnClickListener(new View.OnClickListener() {
+    view.findViewById(R.id.btnCloseVuforia).setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
         finish();
       }
     });
     //endregion
 
-    //region TextView Title
-    if (this.mActivityTitle != null) {
-      tvTitleVuforia = (TextView) mView.findViewById(R.id.tvTitleVuforia);
-      tvTitleVuforia.setText(this.mActivityTitle);
-    }
-    //endregion
-
-    mToolbar = (Toolbar) mView.findViewById(R.id.toolbar_sdkirorchextra);
-
     setThemeColorScheme();
 
+  }
+
+  @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+  private void hideActionBar() {
+    try {
+      getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
+      getSupportActionBar().hide();
+    } catch (Exception ex) {
+      GGGLogImpl.log(ex.getMessage(), LogLevel.ERROR);
+    }
   }
 
   @Override public void onVuforiaResult(Trackable trackable, String uniqueId) {

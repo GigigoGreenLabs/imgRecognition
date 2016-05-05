@@ -1,1 +1,1 @@
-include ':imagerecognitioninterface', ':vuforiaimplementation', ':vuforiacore'
+include ':imagerecognitioninterface', ':vuforiaimplementation', ':vuforiacore', ':app'

@@ -1,5 +1,9 @@
 apply plugin: 'com.android.application'
 
+def VUFORIA_KEY =  '"' + parent.ext.props.vuforiaKey + '"'
+def VUFORIA_SECRET =  '"' + parent.ext.props.vuforiaSecret + '"'
+def VUFORIA_LICENSE =  '"' + parent.ext.props.vuforiaLicense + '"'
+
 android {
   compileSdkVersion 23
   buildToolsVersion "23.0.3"
@@ -10,6 +14,10 @@ android {
     targetSdkVersion 23
     versionCode 1
     versionName "1.0"
+
+    buildConfigField "String", "VUFORIA_KEY", VUFORIA_KEY
+    buildConfigField "String", "VUFORIA_SECRET", VUFORIA_SECRET
+    buildConfigField "String", "VUFORIA_LICENSE", VUFORIA_LICENSE
   }
   buildTypes {
     release {
@@ -21,6 +29,8 @@ android {
 
 dependencies {
   compile fileTree(dir: 'libs', include: ['*.jar'])
+  compile project(':vuforiaimplementation')
+
   testCompile 'junit:junit:4.12'
   compile 'com.android.support:appcompat-v7:23.3.0'
 }

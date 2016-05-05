@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">VuforiaImplementation</string>
+    <string name="ir_app_name">Vuforia Implementation</string>
+    <string name="ir_loading_indicator_message">Loading image recognition module ...</string>
+    <string name="vuforia_loading_indicator_message">@string/ir_loading_indicator_message</string>
 </resources>
