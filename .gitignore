@@ -27,3 +27,5 @@ proguard/
 # Windows files
 Thumbs.db
 *.bak
+
+vuforia.gradle
