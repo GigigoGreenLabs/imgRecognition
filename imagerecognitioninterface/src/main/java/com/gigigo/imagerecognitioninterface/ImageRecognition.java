@@ -5,5 +5,6 @@ package com.gigigo.imagerecognitioninterface;
  * Date 29/4/16.
  */
 public interface ImageRecognition {
+  <T> void setContextProvider(T contextProvider);
   void startImageRecognition(ImageRecognitionCredentials imageRecognitionCredentials);
 }
