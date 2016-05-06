@@ -8,6 +8,7 @@ import com.gigigo.ggglib.permissions.PermissionChecker;
 import com.gigigo.ggglib.permissions.UserPermissionRequestResponseListener;
 import com.gigigo.imagerecognitioninterface.ImageRecognition;
 import com.gigigo.imagerecognitioninterface.ImageRecognitionCredentials;
+import com.gigigo.imagerecognitioninterface.NotFoundContextException;
 import com.gigigo.vuforiaimplementation.credentials.ParcelableIrCredentialsAdapter;
 import com.gigigo.vuforiaimplementation.credentials.ParcelableVuforiaCredentials;
 import com.gigigo.vuforiaimplementation.permissions.CameraPermissionImpl;
@@ -44,14 +45,24 @@ public class ImageRecognitionVuforiaImpl implements ImageRecognition, UserPermis
    * message.
    *
    * @param credentials interface implementation with Vuforia keys
+   *
    */
-  @Override public void startImageRecognition(ImageRecognitionCredentials credentials) {
+  @Override public void startImageRecognition(ImageRecognitionCredentials credentials){
+
+    checkContext();
+
     this.credentials = digestCredentials(credentials);
 
     if (permissionChecker.isGranted(cameraPermission)) {
       startImageRecognitionActivity();
     } else {
       requestPermissions();
+    }
+  }
+
+  private void checkContext()throws NotFoundContextException  {
+    if (contextProvider == null){
+      throw new NotFoundContextException();
     }
   }
 
