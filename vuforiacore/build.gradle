@@ -29,7 +29,18 @@ android {
 
 dependencies {
   compile fileTree(dir: 'libs', include: ['*.jar'])
-  compile 'com.github.Gigigo-Android-Devs.gigigo-utils-suite:ggglib:1.0.3-dev'
+  compile ('com.github.Gigigo-Android-Devs.gigigo-utils-suite:ggglib:1.0.3-dev'){
+    exclude group: 'com.squareup.retrofit2', module: 'retrofit'
+    exclude group: 'com.squareup.retrofit2', module: 'converter-gson'
+    exclude group: 'com.squareup.okhttp3', module: 'okhttp'
+    exclude group: 'com.squareup.okio', module: 'okio'
+    exclude group: 'com.google.android.gms', module: 'play-services-gcm'
+    exclude group: 'com.google.android.gms', module: 'play-services-measurement'
+    exclude group: 'com.google.android.gms', module: 'play-services-basement'
+    exclude group: 'com.google.android.gms', module: 'play-services-base'
+    exclude group: 'com.google.code.gson', module: 'gson'
+
+  }
 }
 
 
