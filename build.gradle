@@ -1,6 +1,6 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
-apply from: 'vuforia.gradle'
+//apply from: 'vuforia.gradle'
 
 buildscript {
   repositories {
