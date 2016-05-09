@@ -24,7 +24,7 @@
         android:layout_marginBottom="@dimen/watermark_margin"
         android:layout_marginRight="@dimen/watermark_margin"
         android:gravity="end"
-        android:src="@drawable/ir_watermark"
+        style="@style/irCustomizationScanWaterMark"
         android:contentDescription="@null"
         />
   </RelativeLayout>

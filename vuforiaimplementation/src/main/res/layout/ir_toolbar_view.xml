@@ -20,7 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/spacing_8"
-        android:src="@drawable/ir_close_button"
+        style="@style/irCustomizationCloseScann"
         android:contentDescription="@null"
         />
 

@@ -11,8 +11,7 @@
 
         <activity
             android:name=".VuforiaActivity"
-            android:screenOrientation="portrait"
-            android:label="@string/activity_title" />
+            android:screenOrientation="portrait"/>
 
     </application>
 

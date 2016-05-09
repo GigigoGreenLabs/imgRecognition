@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <style name="irCustomizationScanWaterMark" >
+    <item name="android:background">@drawable/ir_watermark</item>
+  </style>
+
+  <style name="irCustomizationCloseScann" >
+    <item name="android:background">@drawable/ir_close_button</item>
+  </style>
+  
+</resources>
