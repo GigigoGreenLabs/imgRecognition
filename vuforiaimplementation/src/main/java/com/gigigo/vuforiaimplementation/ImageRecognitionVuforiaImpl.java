@@ -1,6 +1,7 @@
 package com.gigigo.vuforiaimplementation;
 
 import android.content.Intent;
+import android.os.Bundle;
 import com.gigigo.ggglib.ContextProvider;
 import com.gigigo.ggglib.permissions.AndroidPermissionCheckerImpl;
 import com.gigigo.ggglib.permissions.Permission;
@@ -88,7 +89,11 @@ public class ImageRecognitionVuforiaImpl implements ImageRecognition, UserPermis
   private void startImageRecognitionActivity() {
     Intent imageRecognitionIntent = new Intent(contextProvider.getApplicationContext(), VuforiaActivity.class);
     imageRecognitionIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-    imageRecognitionIntent.putExtra(IMAGE_RECOGNITION_CREDENTIALS, credentials);
+
+    Bundle b = new Bundle();
+    b.putParcelable(IMAGE_RECOGNITION_CREDENTIALS, credentials);
+
+    imageRecognitionIntent.putExtra(IMAGE_RECOGNITION_CREDENTIALS, b);
     contextProvider.getApplicationContext().startActivity(imageRecognitionIntent);
   }
 

@@ -26,7 +26,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/vuforia_loading_indicator_message"
+        style="@style/vuforiaCustomizationLoadingMessage"
         android:layout_margin="@dimen/vuforia_loading_message_margin"
         android:gravity="center"
         android:textColor="@color/vuforia_loading_indicator_color"

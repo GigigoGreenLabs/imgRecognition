@@ -42,8 +42,8 @@ public class VuforiaActivity extends AppCompatActivity implements ICloudRecognit
 
   //region implements CloudRecoCommunicator ands initializations calls
   private void initVuforiaKeys(Intent intent) {
-    ParcelableVuforiaCredentials parcelableVuforiaCredentials =
-        intent.getParcelableExtra(ImageRecognitionVuforiaImpl.IMAGE_RECOGNITION_CREDENTIALS);
+    Bundle b = intent.getBundleExtra(ImageRecognitionVuforiaImpl.IMAGE_RECOGNITION_CREDENTIALS);
+    ParcelableVuforiaCredentials parcelableVuforiaCredentials = b.getParcelable(ImageRecognitionVuforiaImpl.IMAGE_RECOGNITION_CREDENTIALS);
 
     mCloudRecoCallBack = new CloudRecognitionActivityLifeCycleCallBack(this, this,
         parcelableVuforiaCredentials.getClientAccessKey(),
