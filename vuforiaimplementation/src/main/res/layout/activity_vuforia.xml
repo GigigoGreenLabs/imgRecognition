@@ -24,12 +24,10 @@
         android:layout_marginBottom="@dimen/watermark_margin"
         android:layout_marginRight="@dimen/watermark_margin"
         android:gravity="end"
-        android:src="@drawable/ir_close"
+        android:src="@drawable/ir_watermark"
         android:contentDescription="@null"
         />
   </RelativeLayout>
-
-
 
 </LinearLayout>
 

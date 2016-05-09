@@ -1,6 +1,7 @@
 package com.gigigo.vuforiaimplementation;
 
 import android.annotation.TargetApi;
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -92,13 +93,19 @@ public class VuforiaActivity extends AppCompatActivity implements ICloudRecognit
   }
 
   @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-  private void hideActionBar() {
-    try {
-      getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
-      getSupportActionBar().hide();
-    } catch (Exception ex) {
-      GGGLogImpl.log(ex.getMessage(), LogLevel.ERROR);
+  private void hideActionBar(){
+    ActionBar actionBar = getActionBar();
+
+    if (actionBar != null){
+      actionBar.hide();
     }
+
+    android.support.v7.app.ActionBar actionBar1 = getSupportActionBar();
+
+    if (actionBar1 != null){
+      actionBar1.hide();
+    }
+
   }
 
   @Override public void onVuforiaResult(Trackable trackable, String uniqueId) {
