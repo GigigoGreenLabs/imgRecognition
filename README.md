@@ -108,7 +108,7 @@ You need to override several _Styles_ in order to get customization of drawable 
     <string name="ir_permission_denied_camera">Denied camera permission</string>
     <string name="ir_permission_rationale_title_camera">Camera Permission</string>
     <string name="ir_permission_rationale_message_camera">App needs the camera device access</string>
-    ```
+  ```
 
 In order to see a complete example in action you can have a look at [Orchextra SDK implementation](https://github.com/Orchextra/orchextra-android-sdk).
 
