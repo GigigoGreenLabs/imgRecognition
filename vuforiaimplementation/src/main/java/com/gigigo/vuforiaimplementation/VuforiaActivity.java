@@ -110,6 +110,7 @@ public class VuforiaActivity extends AppCompatActivity implements ICloudRecognit
 
   @Override public void onVuforiaResult(Trackable trackable, String uniqueId) {
     sendRecognizedPatternToClient(uniqueId);
+    finish();
   }
 
   private void sendRecognizedPatternToClient(String uniqueId) {
