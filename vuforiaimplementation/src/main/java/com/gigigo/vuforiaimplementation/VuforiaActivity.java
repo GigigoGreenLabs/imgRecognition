@@ -116,6 +116,8 @@ public class VuforiaActivity extends AppCompatActivity implements ICloudRecognit
   private void sendRecognizedPatternToClient(String uniqueId) {
     Intent i = new Intent();
     i.putExtra(ImageRecognitionConstants.VUFORIA_PATTERN_ID, uniqueId);
+    String appId = getApplicationContext().getPackageName();
+    i.putExtra(appId, appId);
     i.setAction(RECOGNIZED_IMAGE_INTENT);
     this.sendBroadcast(i);
   }
